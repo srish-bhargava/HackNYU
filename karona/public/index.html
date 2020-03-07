@@ -9,9 +9,48 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <meta http-equiv="origin-trial" data-feature="Generic Sensors" data-expires="2018-02-27" content="AjL+UlBzLjx+0FPXrML6IMA/Ax9GsO/7rUvV/aaKkh3KknUSwDBgymn0d3NhGeRMNS7FlYD73ernqvZNoqzNMw4AAABWeyJvcmlnaW4iOiJodHRwczovL2ludGVsLmdpdGh1Yi5pbzo0NDMiLCJmZWF0dXJlIjoiR2VuZXJpY1NlbnNvciIsImV4cGlyeSI6MTUxOTczOTAwNX0=">
-  <script src="./javascripts/main.js"></script>
-  </head>
+  <script>
+    var movementData = [];
+
+    window.addEventListener('deviceorientation', function(event) {
+        document.getElementById('beta').innerHTML = event.beta;
+        document.getElementById('gamma').innerHTML = event.gamma;
+        document.getElementById('alpha').innerHTML = event.alpha;
+        movementData.push([Math.round(event.beta), Math.round(event.gamma), Math.round(event.aplha)]);
+     });
+
+     window.addEventListener('devicemotion', function(event) {
+        document.getElementById('acceleration-x').innerHTML = event.acceleration.x;
+        document.getElementById('acceleration-y').innerHTML = event.acceleration.y;
+        document.getElementById('acceleration-z').innerHTML = event.acceleration.z;
+
+        document.getElementById('rotation-rate-beta').innerHTML = event.rotationRate.beta;
+        document.getElementById('rotation-rate-gamma').innerHTML = event.rotationRate.gamma;
+        document.getElementById('rotation-rate-alpha').innerHTML = event.rotationRate.alpha;
+
+        document.getElementById('interval').innerHTML = event.interval;
+     });
+
+    var interval = 2000; // 1000 = 1 second, 3000 = 3 seconds
+    function doAjax() {
+      $.ajax({
+        type: 'POST',
+        url: 'https://hack-nyu.now.sh/addMovementData',
+        // url: 'http://127.0.0.1:3000/addMovementData',
+
+        data: {'data': JSON.stringify(movementData)},
+        success: function (data) {
+          movementData = [];
+        },
+        complete: function (data) {
+          // Schedule the next
+          setTimeout(doAjax, interval);
+        }
+      });
+    }
+    setTimeout(doAjax, interval);
+  </script>
+</head>
 </head>
 
 <body>
@@ -19,7 +58,7 @@
   <button type="button" class="btn btn-success btn-lg btn-block">Positive Record</button>
   <button type="button" class="btn btn-danger btn-lg btn-block">Negative Record</button>
   <button type="button" class="btn btn-primary btn-lg btn-block" onclick="alert('Agnitha is stupid')">Test</button>
-  
+
   <div><span>beta: </span><span id="beta"></span></div>
   <div><span>gamma: </span><span id="gamma"></span></div>
   <div><span>alpha: </span><span id="alpha"></span></div>
@@ -30,7 +69,7 @@
   <div><span>rotation-rate-gamma: </span><span id="rotation-rate-gamma"></span></div>
   <div><span>rotation-rate-alpha: </span><span id="rotation-rate-alpha"></span></div>
 
-  
+
 </body>
 
 </html>
