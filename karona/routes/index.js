@@ -23,6 +23,10 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/testmyface', function(req, res, next) {
+  res.status(200).send("Testing your face");
+});
+
 router.post('/addMovementData', function (req, res) {
   client.db("karona").collection('training').insert(req.body, function(err, result) {
     if(err){
