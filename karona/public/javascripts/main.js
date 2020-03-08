@@ -1,9 +1,27 @@
 
+
+
 var timeBuffer = {}
 var dataBuffer = [undefined, undefined]
 
-function addToTimeBuffer(data){
-    let count = 0; 
+function onTouchPositive() {
+    console.log("positive");
+}
+
+function onTouchNegative() {
+    console.log("negative");
+}
+
+console.log(document.getElementById("pos-btn"));
+document.getElementById('pos-btn').addEventListener("mousedown", function (evt) {
+    onTouchPositive();
+});
+document.getElementById('neg-btn').addEventListener("mousedown", function (evt) {
+    onTouchNegative();
+});
+
+function addToTimeBuffer(data) {
+    let count = 0;
     for (const key in data) {
         if (!timeBuffer.hasOwnProperty(key)) {
             timeBuffer[key] = []
@@ -11,20 +29,20 @@ function addToTimeBuffer(data){
         timeBuffer[key].push(data[key])
         count = timeBuffer[key].length;
     }
-    if(count >= 128){
+    if (count >= 128) {
         for (const key in timeBuffer) {
             timeBuffer[key].shift()
         }
-        console.log(JSON.stringify(timeBuffer));
-        timeBuffer = {}
     }
+    // sendData(timeBuffer);
+    timeBuffer = {}
 }
 
 
-function addToDataBuffer(val, indx){
+function addToDataBuffer(val, indx) {
     dataBuffer[indx] = val;
     // If the data buffer is now full, add data object to the time buffer
-    if (dataBuffer[(indx+1)%2] != undefined){
+    if (dataBuffer[(indx + 1) % 2] != undefined) {
         let data = {};
         for (const key in dataBuffer[0]) {
             data[key] = dataBuffer[0][key];
@@ -65,18 +83,20 @@ window.addEventListener('devicemotion', function (event) {
     }, 1);
 });
 
-function startRecording(){
+function startRecording() {
 
 }
 
 
-// function sendData(){
-//     var myRequest = new Request('/addMovementData');
-// }
+function sendData(data) {
+    var myRequest = new Request('/addMovementData');
+    fetch(myRequest, {
+        method: 'POST',
+        body: data
+    });
+}
 
-// fetch(myRequest, {
-//     method: 'POST',
-//     body: }
-// })
+
+
 
 
