@@ -100,7 +100,7 @@ function sendData(data) {
     var myRequest = new Request('/addMovementData');
     fetch(myRequest, {
         method: 'POST',
-        body: data
+        body: JSON.stringify(data)
     });
 }
 
