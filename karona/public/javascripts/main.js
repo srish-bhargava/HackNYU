@@ -1,18 +1,27 @@
 
 
 
-var timeBuffer = {}
-var dataBuffer = [undefined, undefined]
+var timeBuffer = {};
+var dataBuffer = [undefined, undefined];
+
+document.getElementById('time-buffer').innerHTML = (timeBuffer['beta'] || []).length;
 
 function onTouchPositive() {
-    console.log("positive");
+    sendData({
+        result: 1,
+        timeBuffer: timeBuffer
+    });
+    timeBuffer = {};
 }
 
 function onTouchNegative() {
-    console.log("negative");
+    sendData({
+        result: 0,
+        timeBuffer: timeBuffer
+    });
+    timeBuffer = {};
 }
 
-console.log(document.getElementById("pos-btn"));
 document.getElementById('pos-btn').addEventListener("mousedown", function (evt) {
     onTouchPositive();
 });
@@ -34,8 +43,7 @@ function addToTimeBuffer(data) {
             timeBuffer[key].shift()
         }
     }
-    // sendData(timeBuffer);
-    timeBuffer = {}
+    document.getElementById('time-buffer').innerHTML = (timeBuffer['beta'] || []).length;
 }
 
 
