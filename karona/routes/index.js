@@ -1,12 +1,15 @@
+var os = require('os');
+
 var express = require('express');
 var router = express.Router();
 
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://karona:<password>@cluster0-xiijc.gcp.mongodb.net/test?retryWrites=true&w=majority";
+const uri = "mongodb+srv://karona:" + process.env.MONGO_DB_PASSWORD + "@cluster0-xiijc.gcp.mongodb.net/test?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true });
 client.connect(err => {
   const collection = client.db("test").collection("devices");
   // perform actions on the collection object
+  console.log("connected");
 });
 
 function closeConnection(){
@@ -21,8 +24,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/addMovementData', function (req, res) {
-  storingData.push(JSON.parse(req.body.data).data);
-  console.log(storingData);
+  client.db("karona").collection('training').insert(req.body, function(err, result) {
+    if(err){
+      console.log(err)
+    }else{
+      console.log("Adding training data point");
+    }
+  });
   res.status(200).send("Done");
 });
 
