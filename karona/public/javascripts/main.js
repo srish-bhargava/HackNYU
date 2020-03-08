@@ -21,7 +21,7 @@ function addToTimeBuffer(data){
 }
 
 
-function addToBuffer(val, indx){
+function addToDataBuffer(val, indx){
     dataBuffer[indx] = val;
     // If the data buffer is now full, add data object to the time buffer
     if (dataBuffer[(indx+1)%2] != undefined){
