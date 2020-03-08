@@ -1,4 +1,5 @@
 var os = require('os');
+var path = require('path');
 
 var express = require('express');
 var router = express.Router();
@@ -26,6 +27,11 @@ router.get('/', function(req, res, next) {
 router.get('/testmyface', function(req, res, next) {
   res.status(200).send("Testing your face");
 });
+
+router.get('/final', function(req, res) {
+  res.sendFile(path.join(__dirname + '/../public/final.html'));
+});
+
 
 router.post('/addMovementData', function (req, res) {
   client.db("karona").collection('training').insert(req.body, function(err, result) {
