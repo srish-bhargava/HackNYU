@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
 router.post('/addMovementData', function (req, res) {
   client.db("karona").collection('training').insert(req.body, function(err, result) {
     if(err){
-      console.log(err)
+      res.status(200).send(JSON.stringify(err));
     }else{
       console.log("Adding training data point");
     }
